@@ -19,7 +19,25 @@ A tool to track changes in Codeforces ranks for a list of handles (students).
    ```
    pip install -r requirements.txt
    ```
-3. Create a `.env` file with your Codeforces API key (if needed)
+3. Create a `.env` file with your Codeforces API key and secret (optional but recommended):
+
+   ```
+   CODEFORCES_API_KEY=your_api_key_here
+   CODEFORCES_SECRET=your_secret_here
+   ```
+
+   You can get these from your [Codeforces API settings](https://codeforces.com/settings/api).
+
+   Note: While most basic operations work without authentication, using an API key can help avoid rate limits and access more features.
+
+   A template `.env.example` file is provided. You can copy it to create your `.env` file:
+
+   ```
+   cp .env.example .env
+   ```
+
+   Then edit the `.env` file with your actual API credentials.
+
 4. Add your students' handles to the `handles.txt` file (one handle per line)
 
 ## Usage
@@ -127,6 +145,7 @@ You can modify the code to:
 - **API Rate Limits**: The Codeforces API has rate limits. If you're tracking many handles, the tool might hit these limits. The code includes delays to mitigate this.
 - **Invalid Handles**: If a handle is invalid, the validate_handles.py script will detect it and not add it to the list.
 - **Missing Dependencies**: Make sure to install all dependencies listed in requirements.txt.
+- **API Authentication**: If you're experiencing issues with API rate limits or need access to more features, make sure to set up your API key and secret in the `.env` file. The application will work without authentication for basic operations, but authenticated requests are more reliable.
 
 ## License
 

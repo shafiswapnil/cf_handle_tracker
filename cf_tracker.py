@@ -7,6 +7,8 @@ import os
 import json
 import time
 import requests
+import hashlib
+import random
 from datetime import datetime
 from tabulate import tabulate
 from dotenv import load_dotenv
@@ -18,6 +20,8 @@ load_dotenv()
 API_BASE_URL = "https://codeforces.com/api"
 HANDLES_FILE = "handles.txt"
 USER_DATA_FILE = "user_data.json"
+API_KEY = os.getenv("CODEFORCES_API_KEY")
+API_SECRET = os.getenv("CODEFORCES_SECRET")
 COLORS = {
     "green": "\033[92m",
     "red": "\033[91m",
@@ -79,7 +83,14 @@ def get_user_info(handles):
         handles_param = ";".join(chunk)
         
         try:
-            response = requests.get(f"{API_BASE_URL}/user.info?handles={handles_param}")
+            # Basic request without authentication (works for most cases)
+            url = f"{API_BASE_URL}/user.info?handles={handles_param}"
+            
+            # If API key and secret are available, use authenticated request
+            if API_KEY and API_SECRET:
+                url = create_authenticated_url("user.info", {"handles": handles_param})
+            
+            response = requests.get(url)
             response.raise_for_status()
             data = response.json()
             
@@ -116,6 +127,37 @@ def get_user_info(handles):
             # Continue with the next chunk
     
     return all_user_info
+
+def create_authenticated_url(method_name, params=None):
+    """Create an authenticated URL for Codeforces API."""
+    if not API_KEY or not API_SECRET:
+        print("Warning: API key or secret not found. Using unauthenticated request.")
+        query_params = "&".join([f"{k}={v}" for k, v in (params or {}).items()])
+        return f"{API_BASE_URL}/{method_name}?{query_params}"
+    
+    if params is None:
+        params = {}
+    
+    # Add authentication parameters
+    params["apiKey"] = API_KEY
+    params["time"] = str(int(time.time()))
+    
+    # Generate random string for additional security
+    rand = str(random.randint(100000, 999999))
+    
+    # Create signature string
+    param_strings = []
+    for key in sorted(params.keys()):
+        param_strings.append(f"{key}={params[key]}")
+    
+    signature_string = f"{rand}/{method_name}?{'&'.join(param_strings)}#{API_SECRET}"
+    
+    # Calculate SHA512 hash
+    signature = hashlib.sha512(signature_string.encode()).hexdigest()
+    
+    # Build the final URL
+    query_params = "&".join([f"{k}={v}" for k, v in params.items()])
+    return f"{API_BASE_URL}/{method_name}?{query_params}&apiSig={rand}{signature}"
 
 def compare_data(current_data, previous_data):
     """Compare current and previous data to detect changes."""

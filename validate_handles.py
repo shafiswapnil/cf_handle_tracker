@@ -7,9 +7,48 @@ import os
 import sys
 import requests
 import time
+import hashlib
+import random
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 HANDLES_FILE = "handles.txt"
 API_BASE_URL = "https://codeforces.com/api"
+API_KEY = os.getenv("CODEFORCES_API_KEY")
+API_SECRET = os.getenv("CODEFORCES_SECRET")
+
+def create_authenticated_url(method_name, params=None):
+    """Create an authenticated URL for Codeforces API."""
+    if not API_KEY or not API_SECRET:
+        print("Warning: API key or secret not found. Using unauthenticated request.")
+        query_params = "&".join([f"{k}={v}" for k, v in (params or {}).items()])
+        return f"{API_BASE_URL}/{method_name}?{query_params}"
+    
+    if params is None:
+        params = {}
+    
+    # Add authentication parameters
+    params["apiKey"] = API_KEY
+    params["time"] = str(int(time.time()))
+    
+    # Generate random string for additional security
+    rand = str(random.randint(100000, 999999))
+    
+    # Create signature string
+    param_strings = []
+    for key in sorted(params.keys()):
+        param_strings.append(f"{key}={params[key]}")
+    
+    signature_string = f"{rand}/{method_name}?{'&'.join(param_strings)}#{API_SECRET}"
+    
+    # Calculate SHA512 hash
+    signature = hashlib.sha512(signature_string.encode()).hexdigest()
+    
+    # Build the final URL
+    query_params = "&".join([f"{k}={v}" for k, v in params.items()])
+    return f"{API_BASE_URL}/{method_name}?{query_params}&apiSig={rand}{signature}"
 
 def validate_handles():
     """Validate Codeforces handles and add valid ones to the handles.txt file."""
@@ -59,7 +98,14 @@ def validate_handles():
         handles_param = ";".join(chunk)
         
         try:
-            response = requests.get(f"{API_BASE_URL}/user.info?handles={handles_param}")
+            # Basic request without authentication (works for most cases)
+            url = f"{API_BASE_URL}/user.info?handles={handles_param}"
+            
+            # If API key and secret are available, use authenticated request
+            if API_KEY and API_SECRET:
+                url = create_authenticated_url("user.info", {"handles": handles_param})
+            
+            response = requests.get(url)
             
             if response.status_code == 200:
                 data = response.json()
@@ -147,7 +193,14 @@ def validate_handles():
 def validate_single_handle(handle):
     """Validate a single Codeforces handle."""
     try:
-        response = requests.get(f"{API_BASE_URL}/user.info?handles={handle}")
+        # Basic request without authentication (works for most cases)
+        url = f"{API_BASE_URL}/user.info?handles={handle}"
+        
+        # If API key and secret are available, use authenticated request
+        if API_KEY and API_SECRET:
+            url = create_authenticated_url("user.info", {"handles": handle})
+        
+        response = requests.get(url)
         
         if response.status_code == 200:
             data = response.json()
