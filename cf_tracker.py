@@ -9,6 +9,7 @@ import time
 import requests
 import hashlib
 import random
+import urllib.parse  # Add this import for URL encoding
 from datetime import datetime
 from tabulate import tabulate
 from dotenv import load_dotenv
@@ -18,7 +19,7 @@ load_dotenv()
 
 # Constants
 API_BASE_URL = "https://codeforces.com/api"
-HANDLES_FILE = "handles.txt"
+HANDLES_FILE = "private_handles.txt"
 USER_DATA_FILE = "user_data.json"
 API_KEY = os.getenv("CODEFORCES_API_KEY")
 API_SECRET = os.getenv("CODEFORCES_SECRET")
@@ -82,7 +83,9 @@ def get_user_info(handles):
     
     for i in range(0, len(handles), chunk_size):
         chunk = handles[i:i+chunk_size]
-        handles_param = ";".join(chunk)
+        # URL encode each handle to handle special characters
+        encoded_handles = [urllib.parse.quote(handle) for handle in chunk]
+        handles_param = ";".join(encoded_handles)
         
         print(f"Processing handles {i+1}-{min(i+chunk_size, len(handles))} of {len(handles)}...")
         
@@ -128,8 +131,51 @@ def get_user_info(handles):
             
         except requests.exceptions.RequestException as e:
             print(f"Request Error: {e}")
-            print(f"Failed to process handles: {', '.join(chunk)}")
-            # Continue with the next chunk
+            print(f"Failed to process handles as a group. Trying individual requests...")
+            
+            # Try to fetch each handle individually
+            for handle in chunk:
+                try:
+                    # Try to get individual handle info
+                    encoded_handle = urllib.parse.quote(handle)
+                    individual_url = f"{API_BASE_URL}/user.info?handles={encoded_handle}"
+                    
+                    if API_KEY and API_SECRET:
+                        individual_url = create_authenticated_url("user.info", {"handles": encoded_handle})
+                    
+                    individual_response = requests.get(individual_url)
+                    individual_response.raise_for_status()
+                    individual_data = individual_response.json()
+                    
+                    if individual_data["status"] == "OK" and individual_data["result"]:
+                        user = individual_data["result"][0]
+                        handle = user["handle"]
+                        max_rank = user.get("maxRank", "unrated")
+                        
+                        # Fix for when maxRank is the same as handle
+                        if max_rank == handle:
+                            max_rank = user.get("rank", "unrated")
+                            if user.get("maxRating", 0) >= 3000:
+                                max_rank = "legendary grandmaster"
+                        
+                        all_user_info[handle] = {
+                            "handle": handle,
+                            "rating": user.get("rating", 0),
+                            "rank": user.get("rank", "unrated"),
+                            "max_rating": user.get("maxRating", 0),
+                            "max_rank": max_rank,
+                            "last_updated": datetime.now().isoformat()
+                        }
+                        print(f"  ✓ Successfully fetched data for {handle}")
+                    else:
+                        print(f"  ✗ Failed to fetch data for {handle}: {individual_data.get('comment', 'Unknown error')}")
+                    
+                    # Be extra nice to the API when doing individual requests
+                    time.sleep(1)
+                    
+                except requests.exceptions.RequestException as individual_error:
+                    print(f"  ✗ Error fetching data for {handle}: {individual_error}")
+                    time.sleep(1)
     
     return all_user_info
 
@@ -151,6 +197,7 @@ def create_authenticated_url(method_name, params=None):
     rand = str(random.randint(100000, 999999))
     
     # Create signature string
+    # Note: We use the raw (unencoded) values for the signature
     param_strings = []
     for key in sorted(params.keys()):
         param_strings.append(f"{key}={params[key]}")
@@ -160,8 +207,17 @@ def create_authenticated_url(method_name, params=None):
     # Calculate SHA512 hash
     signature = hashlib.sha512(signature_string.encode()).hexdigest()
     
-    # Build the final URL
-    query_params = "&".join([f"{k}={v}" for k, v in params.items()])
+    # Build the final URL with URL-encoded parameter values
+    encoded_params = {}
+    for key, value in params.items():
+        # Don't encode the apiKey and time parameters
+        if key in ["apiKey", "time"]:
+            encoded_params[key] = value
+        else:
+            # Only encode the value, not the key
+            encoded_params[key] = urllib.parse.quote(value)
+    
+    query_params = "&".join([f"{k}={v}" for k, v in encoded_params.items()])
     return f"{API_BASE_URL}/{method_name}?{query_params}&apiSig={rand}{signature}"
 
 def compare_data(current_data, previous_data):

@@ -9,6 +9,7 @@ import requests
 import time
 import hashlib
 import random
+import urllib.parse  # Add this import for URL encoding
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -37,6 +38,7 @@ def create_authenticated_url(method_name, params=None):
     rand = str(random.randint(100000, 999999))
     
     # Create signature string
+    # Note: We use the raw (unencoded) values for the signature
     param_strings = []
     for key in sorted(params.keys()):
         param_strings.append(f"{key}={params[key]}")
@@ -46,8 +48,17 @@ def create_authenticated_url(method_name, params=None):
     # Calculate SHA512 hash
     signature = hashlib.sha512(signature_string.encode()).hexdigest()
     
-    # Build the final URL
-    query_params = "&".join([f"{k}={v}" for k, v in params.items()])
+    # Build the final URL with URL-encoded parameter values
+    encoded_params = {}
+    for key, value in params.items():
+        # Don't encode the apiKey and time parameters
+        if key in ["apiKey", "time"]:
+            encoded_params[key] = value
+        else:
+            # Only encode the value, not the key
+            encoded_params[key] = urllib.parse.quote(value)
+    
+    query_params = "&".join([f"{k}={v}" for k, v in encoded_params.items()])
     return f"{API_BASE_URL}/{method_name}?{query_params}&apiSig={rand}{signature}"
 
 def validate_handles():
@@ -98,7 +109,9 @@ def validate_handles():
     
     for i in range(0, len(new_handles), chunk_size):
         chunk = new_handles[i:i+chunk_size]
-        handles_param = ";".join(chunk)
+        # URL encode each handle to handle special characters
+        encoded_handles = [urllib.parse.quote(handle) for handle in chunk]
+        handles_param = ";".join(encoded_handles)
         
         print(f"Processing handles {i+1}-{min(i+chunk_size, len(new_handles))} of {len(new_handles)}...")
         
@@ -117,9 +130,11 @@ def validate_handles():
                 if data["status"] == "OK":
                     # All handles in this chunk are valid
                     valid_handles.extend(chunk)
+                    print(f"  ✓ All handles in this chunk are valid")
                 else:
                     # Some error occurred, treat all as invalid for now
                     invalid_handles.extend(chunk)
+                    print(f"  ✗ API Error: {data.get('comment', 'Unknown error')}")
             elif response.status_code == 400:
                 # This usually means some handles are invalid
                 data = response.json()
@@ -150,25 +165,30 @@ def validate_handles():
                             invalid_handles.append(handle)
             else:
                 print(f"API Error: Status code {response.status_code}")
+                print(f"Failed to process handles as a group. Trying individual validation...")
                 # Validate one by one as a fallback
                 for handle in chunk:
                     if validate_single_handle(handle):
                         valid_handles.append(handle)
+                        print(f"  ✓ {handle} is valid")
                     else:
                         invalid_handles.append(handle)
+                        print(f"  ✗ {handle} is invalid")
             
             # Be nice to the API - increase delay between requests
             time.sleep(2)  # Increased from 1 to 2 seconds
             
         except requests.exceptions.RequestException as e:
             print(f"Request Error: {e}")
-            print(f"Failed to process handles: {', '.join(chunk)}")
+            print(f"Failed to process handles as a group. Trying individual validation...")
             # Validate one by one as a fallback
             for handle in chunk:
                 if validate_single_handle(handle):
                     valid_handles.append(handle)
+                    print(f"  ✓ {handle} is valid")
                 else:
                     invalid_handles.append(handle)
+                    print(f"  ✗ {handle} is invalid")
     
     # Remove duplicates while preserving order
     valid_handles = list(dict.fromkeys(valid_handles))
@@ -199,12 +219,15 @@ def validate_handles():
 def validate_single_handle(handle):
     """Validate a single Codeforces handle."""
     try:
+        # URL encode the handle to handle special characters
+        encoded_handle = urllib.parse.quote(handle)
+        
         # Basic request without authentication (works for most cases)
-        url = f"{API_BASE_URL}/user.info?handles={handle}"
+        url = f"{API_BASE_URL}/user.info?handles={encoded_handle}"
         
         # If API key and secret are available, use authenticated request
         if API_KEY and API_SECRET:
-            url = create_authenticated_url("user.info", {"handles": handle})
+            url = create_authenticated_url("user.info", {"handles": encoded_handle})
         
         response = requests.get(url)
         

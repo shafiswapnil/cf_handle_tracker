@@ -147,6 +147,7 @@ You can modify the code to:
 - **Missing Dependencies**: Make sure to install all dependencies listed in requirements.txt.
 - **API Authentication**: If you're experiencing issues with API rate limits or need access to more features, make sure to set up your API key and secret in the `.env` file. The application will work without authentication for basic operations, but authenticated requests are more reliable.
 - **Large Number of Handles**: If you're tracking a large number of handles (more than 100), the application will process them in smaller chunks to avoid URL length limitations. This might make the process slower, but more reliable. If you're still experiencing issues, you can further reduce the `chunk_size` variable in the code.
+- **Special Characters in Handles**: Some Codeforces handles contain special characters like underscores, dots, or hyphens. The application now properly URL-encodes these characters to avoid API errors. If you're still experiencing issues with specific handles, try adding them individually rather than in bulk.
 
 ## License
 
