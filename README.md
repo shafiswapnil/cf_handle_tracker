@@ -20,6 +20,6 @@ Codeforces Rank Tracker is a tool designed for educators to track their students
 
 ## Links
 
-- [GitHub Repository](https://github.com/shafiswapnil/cfapi)
-- [Latest Release](https://github.com/shafiswapnil/cfapi/releases/latest)
-- [Documentation](https://github.com/shafiswapnil/cfapi/blob/main/README.md)
+- [GitHub Repository](https://github.com/shafiswapnil/cf_handle_tracker)
+- [Latest Release](https://github.com/shafiswapnil/cf_handle_tracker/releases/latest)
+- [Documentation](https://github.com/shafiswapnil/cf_handle_tracker/blob/main/README.md)
