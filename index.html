@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Codeforces Rank Tracker</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-chart-line"></i> Codeforces Rank Tracker</h1>
+            <p class="tagline">Track your students' progress on Codeforces</p>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2>Monitor Codeforces Ratings and Ranks</h2>
+                <p>A simple tool for educators to track their students' competitive programming progress</p>
+                <div class="cta-buttons">
+                    <a href="https://github.com/shafiswapnil/cfapi/releases/latest" class="btn primary"><i class="fas fa-download"></i> Download Latest Release</a>
+                    <a href="https://github.com/shafiswapnil/cfapi" class="btn secondary"><i class="fab fa-github"></i> View on GitHub</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <h2>Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Track Multiple Users</h3>
+                    <p>Monitor an unlimited number of Codeforces handles at once</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-exchange-alt"></i>
+                    <h3>Detect Changes</h3>
+                    <p>Automatically detect and highlight rating and rank changes</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-history"></i>
+                    <h3>Historical Data</h3>
+                    <p>Store historical data for comparison over time</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-terminal"></i>
+                    <h3>Simple CLI</h3>
+                    <p>Easy-to-use command-line interface with colorized output</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-file-csv"></i>
+                    <h3>CSV Export</h3>
+                    <p>Export data to CSV for further analysis</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Handle Validation</h3>
+                    <p>Validate handles before adding them to your tracking list</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="screenshot">
+        <div class="container">
+            <h2>How It Works</h2>
+            <div class="screenshot-container">
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-buttons">
+                            <span class="terminal-button red"></span>
+                            <span class="terminal-button yellow"></span>
+                            <span class="terminal-button green"></span>
+                        </div>
+                        <div class="terminal-title">Terminal</div>
+                    </div>
+                    <div class="terminal-content">
+                        <pre><code>$ python3 cf_tracker.py
+Fetching data for 5 handles...
+Processing handles: tourist, Petr, ecnerwala, Um_nik, Benq
+
+Handle      Current Rating  Current Rank         Max Rating  Max Rank            Change
+----------  --------------  -------------------  ----------  ------------------  --------
+tourist     3979            Legendary Grandmaster  3979        Legendary Grandmaster  +25 ↑
+Petr        3597            International Grandmaster  3756        Legendary Grandmaster  0 =
+ecnerwala   3531            International Grandmaster  3531        International Grandmaster  -12 ↓
+Um_nik      3488            International Grandmaster  3488        International Grandmaster  0 =
+Benq        3469            International Grandmaster  3469        International Grandmaster  +7 ↑
+
+Data updated successfully!
+</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="usage">
+        <div class="container">
+            <h2>Getting Started</h2>
+            <div class="usage-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Install Dependencies</h3>
+                        <pre><code>pip install -r requirements.txt</code></pre>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Add Student Handles</h3>
+                        <pre><code>python3 add_handles.py</code></pre>
+                        <p>Or edit <code>handles.txt</code> directly</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Track Ranks</h3>
+                        <pre><code>python3 cf_tracker.py</code></pre>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Export Data (Optional)</h3>
+                        <pre><code>python3 export_csv.py</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Codeforces Rank Tracker | <a href="https://github.com/shafiswapnil/cfapi">GitHub Repository</a></p>
+            <p>Made with <i class="fas fa-heart"></i> for competitive programming educators</p>
+        </div>
+    </footer>
+</body>
+</html> 
