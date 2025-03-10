@@ -19,7 +19,7 @@ load_dotenv()
 
 # Constants
 API_BASE_URL = "https://codeforces.com/api"
-HANDLES_FILE = "private_handles.txt"
+HANDLES_FILE = "handles.txt"
 USER_DATA_FILE = "user_data.json"
 API_KEY = os.getenv("CODEFORCES_API_KEY")
 API_SECRET = os.getenv("CODEFORCES_SECRET")
