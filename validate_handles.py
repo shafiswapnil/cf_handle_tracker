@@ -91,11 +91,16 @@ def validate_handles():
     valid_handles = []
     invalid_handles = []
     
-    # Process handles in chunks to avoid API rate limits
-    chunk_size = 100
+    # Process handles in chunks to avoid API rate limits and URL length limitations
+    chunk_size = 20  # Reduced from 100 to 20
+    
+    print(f"Processing {len(new_handles)} handles in chunks of {chunk_size}...")
+    
     for i in range(0, len(new_handles), chunk_size):
         chunk = new_handles[i:i+chunk_size]
         handles_param = ";".join(chunk)
+        
+        print(f"Processing handles {i+1}-{min(i+chunk_size, len(new_handles))} of {len(new_handles)}...")
         
         try:
             # Basic request without authentication (works for most cases)
@@ -152,11 +157,12 @@ def validate_handles():
                     else:
                         invalid_handles.append(handle)
             
-            # Be nice to the API
-            time.sleep(1)
+            # Be nice to the API - increase delay between requests
+            time.sleep(2)  # Increased from 1 to 2 seconds
             
         except requests.exceptions.RequestException as e:
             print(f"Request Error: {e}")
+            print(f"Failed to process handles: {', '.join(chunk)}")
             # Validate one by one as a fallback
             for handle in chunk:
                 if validate_single_handle(handle):

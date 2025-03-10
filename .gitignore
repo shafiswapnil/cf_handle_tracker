@@ -36,3 +36,5 @@ codeforces_ranks.csv
 # OS specific files
 .DS_Store
 Thumbs.db 
+
+private_handles.txt

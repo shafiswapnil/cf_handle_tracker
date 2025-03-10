@@ -146,6 +146,7 @@ You can modify the code to:
 - **Invalid Handles**: If a handle is invalid, the validate_handles.py script will detect it and not add it to the list.
 - **Missing Dependencies**: Make sure to install all dependencies listed in requirements.txt.
 - **API Authentication**: If you're experiencing issues with API rate limits or need access to more features, make sure to set up your API key and secret in the `.env` file. The application will work without authentication for basic operations, but authenticated requests are more reliable.
+- **Large Number of Handles**: If you're tracking a large number of handles (more than 100), the application will process them in smaller chunks to avoid URL length limitations. This might make the process slower, but more reliable. If you're still experiencing issues, you can further reduce the `chunk_size` variable in the code.
 
 ## License
 

@@ -73,14 +73,18 @@ def get_user_info(handles):
     if not handles:
         return {}
     
-    # Codeforces API allows up to 10,000 handles per request, but we'll chunk them
-    # into smaller groups to be safe
-    chunk_size = 100
+    # Reduce chunk size to avoid URL length limitations
+    # Codeforces API has limitations on URL length
+    chunk_size = 20  # Reduced from 100 to 20
     all_user_info = {}
+    
+    print(f"Processing {len(handles)} handles in chunks of {chunk_size}...")
     
     for i in range(0, len(handles), chunk_size):
         chunk = handles[i:i+chunk_size]
         handles_param = ";".join(chunk)
+        
+        print(f"Processing handles {i+1}-{min(i+chunk_size, len(handles))} of {len(handles)}...")
         
         try:
             # Basic request without authentication (works for most cases)
@@ -119,11 +123,12 @@ def get_user_info(handles):
             else:
                 print(f"API Error: {data.get('comment', 'Unknown error')}")
             
-            # Be nice to the API
-            time.sleep(1)
+            # Be nice to the API - increase delay between requests
+            time.sleep(2)  # Increased from 1 to 2 seconds
             
         except requests.exceptions.RequestException as e:
             print(f"Request Error: {e}")
+            print(f"Failed to process handles: {', '.join(chunk)}")
             # Continue with the next chunk
     
     return all_user_info
