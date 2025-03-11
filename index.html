@@ -12,6 +12,7 @@
         <div class="container">
             <h1><i class="fas fa-chart-line"></i> Codeforces Rank Tracker</h1>
             <p class="tagline">Track your students' progress on Codeforces</p>
+            <p class="version">Version 1.1.0</p>
         </div>
     </header>
 
@@ -62,6 +63,46 @@
                     <h3>Handle Validation</h3>
                     <p>Validate handles before adding them to your tracking list</p>
                 </div>
+                <div class="feature-card highlight">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Historical Tracking</h3>
+                    <p>Track ratings from specific time periods (e.g., March 2022, 2023, 2024)</p>
+                </div>
+                <div class="feature-card highlight">
+                    <i class="fas fa-chart-bar"></i>
+                    <h3>Progress Analysis</h3>
+                    <p>Compare student progress across multiple years</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="whats-new">
+        <div class="container">
+            <h2>What's New in v1.1.0</h2>
+            <div class="new-features">
+                <div class="new-feature">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Historical Rank Tracking</h3>
+                    <p>Track ratings and ranks from specific time periods (March 2022, 2023, 2024)</p>
+                    <pre><code>python3 historical_ranks.py</code></pre>
+                </div>
+                <div class="new-feature">
+                    <i class="fas fa-file-export"></i>
+                    <h3>Historical Data Export</h3>
+                    <p>Export historical data to CSV for further analysis</p>
+                    <pre><code>python3 export_historical_csv.py</code></pre>
+                </div>
+                <div class="new-feature">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Improved API Handling</h3>
+                    <p>Enhanced error recovery and URL encoding for special characters in handles</p>
+                </div>
+                <div class="new-feature">
+                    <i class="fas fa-tasks"></i>
+                    <h3>Better Progress Reporting</h3>
+                    <p>Added more detailed progress information during API requests</p>
+                </div>
             </div>
         </div>
     </section>
@@ -100,6 +141,42 @@ Data updated successfully!
         </div>
     </section>
 
+    <section class="historical-demo">
+        <div class="container">
+            <h2>Historical Tracking Demo</h2>
+            <div class="screenshot-container">
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-buttons">
+                            <span class="terminal-button red"></span>
+                            <span class="terminal-button yellow"></span>
+                            <span class="terminal-button green"></span>
+                        </div>
+                        <div class="terminal-title">Terminal</div>
+                    </div>
+                    <div class="terminal-content">
+                        <pre><code>$ python3 historical_ranks.py
+Fetching historical data for tourist...
+Fetching historical data for Petr...
+Fetching historical data for ecnerwala...
+
+Historical Codeforces Ratings for March:
++----------+-----------------+----------------+------------------+----------------+------------------+----------------+
+| Handle   | March 2022      | Contest Date   | March 2023       | Contest Date   | March 2024       | Contest Date   |
++==========+=================+================+==================+================+==================+================+
+| tourist  | 3805 (Legendary)| 2022-02-23     | 3887 (Legendary) | 2023-03-19     | 3979 (Legendary) | 2024-03-10     |
++----------+-----------------+----------------+------------------+----------------+------------------+----------------+
+| Petr     | 3597 (Int'l GM) | 2022-03-15     | 3597 (Int'l GM)  | 2023-02-28     | 3597 (Int'l GM)  | 2024-02-15     |
++----------+-----------------+----------------+------------------+----------------+------------------+----------------+
+| ecnerwala| 3531 (Int'l GM) | 2022-01-23     | 3531 (Int'l GM)  | 2023-01-08     | 3531 (Int'l GM)  | 2024-01-21     |
++----------+-----------------+----------------+------------------+----------------+------------------+----------------+
+</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="usage">
         <div class="container">
             <h2>Getting Started</h2>
@@ -129,8 +206,16 @@ Data updated successfully!
                 <div class="step">
                     <div class="step-number">4</div>
                     <div class="step-content">
+                        <h3>Track Historical Ranks</h3>
+                        <pre><code>python3 historical_ranks.py</code></pre>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
                         <h3>Export Data (Optional)</h3>
-                        <pre><code>python3 export_csv.py</code></pre>
+                        <pre><code>python3 export_csv.py
+python3 export_historical_csv.py</code></pre>
                     </div>
                 </div>
             </div>
@@ -141,6 +226,7 @@ Data updated successfully!
         <div class="container">
             <p>&copy; 2024 Codeforces Rank Tracker | <a href="https://github.com/shafiswapnil/cf_handle_tracker">GitHub Repository</a></p>
             <p>Made with <i class="fas fa-heart"></i> for competitive programming educators</p>
+            <p class="version-footer">Version 1.1.0</p>
         </div>
     </footer>
 </body>

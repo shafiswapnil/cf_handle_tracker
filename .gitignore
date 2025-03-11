@@ -17,3 +17,14 @@ Thumbs.db
 *.tmp
 *.bak
 *.log 
+*.csv
+
+private_handles.txt
+*.zip
+*.tar
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.lzma
+*.tar.wim
+
