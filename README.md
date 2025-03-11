@@ -2,6 +2,8 @@
 
 A tool to track changes in Codeforces ranks for a list of handles (students).
 
+**Current Version: 1.1.0**
+
 ## Features
 
 - Track Codeforces ratings and ranks for multiple users
@@ -146,6 +148,25 @@ The tool stores user data in a JSON file (`user_data.json`) to track changes bet
 - Maximum rank
 - Last updated timestamp
 
+## Understanding Contest Dates in Historical Data
+
+The "Contest Date" columns in historical data represent the actual dates when the Codeforces contests took place that determined the ratings shown for each time period.
+
+For example, if you see:
+
+```
+| Handle | March 2022 Rating | March 2022 Contest Date | March 2023 Rating | March 2023 Contest Date |
+|--------|------------------|------------------------|------------------|------------------------|
+| user1  | 1500 (Specialist) | 2022-03-15             | 1600 (Expert)     | 2023-02-28             |
+```
+
+This means:
+
+- For March 2022: The rating of 1500 was from a contest on March 15, 2022
+- For March 2023: The rating of 1600 was from a contest on February 28, 2023 (closest to March)
+
+The script looks for the contest date closest to March 15th of each year, but within a 3-month window (90 days). If a user didn't participate in any contests within that window, you'll see "N/A" in both the rating and contest date columns.
+
 ## Rank Colors
 
 The tool uses the following colors for different Codeforces ranks:
@@ -195,6 +216,11 @@ You can modify the code to:
 - **API Authentication**: If you're experiencing issues with API rate limits or need access to more features, make sure to set up your API key and secret in the `.env` file. The application will work without authentication for basic operations, but authenticated requests are more reliable.
 - **Large Number of Handles**: If you're tracking a large number of handles (more than 100), the application will process them in smaller chunks to avoid URL length limitations. This might make the process slower, but more reliable. If you're still experiencing issues, you can further reduce the `chunk_size` variable in the code.
 - **Special Characters in Handles**: Some Codeforces handles contain special characters like underscores, dots, or hyphens. The application now properly URL-encodes these characters to avoid API errors. If you're still experiencing issues with specific handles, try adding them individually rather than in bulk.
+
+## Version History
+
+- **v1.1.0** - Added historical rank tracking and CSV export for historical data
+- **v1.0.0** - Initial release with basic rank tracking functionality
 
 ## License
 

@@ -1,8 +1,29 @@
-# Codeforces Rank Tracker v1.0.0
+# Codeforces Rank Tracker v1.1.0
 
-## First Stable Release
+## New Features in v1.1.0
 
-This is the first stable release of the Codeforces Rank Tracker, a tool designed to track changes in Codeforces ranks for a list of handles (students).
+This release adds historical rank tracking capabilities to the Codeforces Rank Tracker, allowing educators to track their students' progress over time.
+
+### Major New Features
+
+- **Historical Rank Tracking**: Added ability to track ratings and ranks from specific time periods (March 2022, 2023, 2024)
+- **Historical Data Export**: Added CSV export functionality for historical data
+- **Improved API Handling**: Enhanced error recovery and URL encoding for special characters in handles
+- **Better Progress Reporting**: Added more detailed progress information during API requests
+
+### New Scripts
+
+- `historical_ranks.py`: Track ratings and ranks from specific time periods
+- `export_historical_csv.py`: Export historical data to CSV
+
+### Improvements
+
+- Reduced API request chunk size for better reliability with large numbers of handles
+- Added fallback mechanism for failed API requests
+- Improved error reporting and diagnostics
+- Enhanced documentation with detailed usage instructions for new features
+
+## Previous Release (v1.0.0)
 
 ### Features
 

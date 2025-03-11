@@ -45,3 +45,4 @@ private_handles.txt
 *.gz
 *.bz2
 *.wim
+*.csv
