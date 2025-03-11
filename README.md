@@ -11,6 +11,7 @@ A tool to track changes in Codeforces ranks for a list of handles (students).
 - Colorized output for better visualization
 - CSV export for further analysis
 - Handle validation before adding to tracking list
+- Historical rank tracking for specific time periods
 
 ## Setup
 
@@ -77,6 +78,32 @@ This will:
 - Compare them with the previously stored data
 - Display the results in a table with colorized output
 - Save the current data for future comparison
+
+### Historical Rank Tracking
+
+To track historical ranks for specific time periods (e.g., March 2022, 2023, 2024), use the historical_ranks.py script:
+
+```
+python3 historical_ranks.py
+```
+
+This will:
+
+- Fetch the complete rating history for each handle
+- Find the ratings closest to March of each specified year
+- Display the results in a table with colorized output
+
+You can also specify specific handles as command-line arguments:
+
+```
+python3 historical_ranks.py tourist Petr ecnerwala
+```
+
+The script will show:
+
+- The rating and rank for each handle in March of each year
+- The exact date of the contest that determined that rating
+- "N/A" if no rating data is available within 3 months of the target date
 
 ### Exporting Data
 
