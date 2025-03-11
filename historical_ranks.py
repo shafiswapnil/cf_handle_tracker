@@ -19,7 +19,7 @@ load_dotenv()
 # Constants
 API_KEY = os.getenv("CODEFORCES_API_KEY")
 SECRET = os.getenv("CODEFORCES_SECRET")
-HANDLES_FILE = "handles.txt"
+HANDLES_FILE = "private_handles.txt"
 
 # ANSI color codes for different ranks
 RANK_COLORS = {

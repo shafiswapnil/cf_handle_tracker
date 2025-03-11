@@ -105,9 +105,29 @@ The script will show:
 - The exact date of the contest that determined that rating
 - "N/A" if no rating data is available within 3 months of the target date
 
-### Exporting Data
+#### Exporting Historical Data to CSV
 
-Export the data to CSV:
+To export the historical rank data to a CSV file:
+
+```
+python3 export_historical_csv.py
+```
+
+This will:
+
+- Fetch the historical data for all handles in your handles.txt file
+- Export the data to a CSV file (`historical_codeforces_ranks.csv`)
+- Include ratings, ranks, and contest dates for each time period
+
+You can also specify specific handles as command-line arguments:
+
+```
+python3 export_historical_csv.py tourist Petr ecnerwala
+```
+
+### Exporting Current Data
+
+Export the current tracking data to CSV:
 
 ```
 python3 export_csv.py
